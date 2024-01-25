@@ -53,3 +53,24 @@ func TestRawSql(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, 4, len(samples))
 }
+
+func TestSqlRows(t *testing.T) {
+	var samples []Sample
+	rows, err := db.Raw("select id, name from sample").Rows()
+	assert.Nil(t, err)
+	defer rows.Close()
+
+	for rows.Next() {
+		var id string
+		var name string
+
+		err := rows.Scan(&id, &name)
+		assert.Nil(t, err)
+		samples = append(samples, Sample{
+			Id:   id,
+			Name: name,
+		})
+	}
+
+	assert.Equal(t, 4, len(samples))
+}
