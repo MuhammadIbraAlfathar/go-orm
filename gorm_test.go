@@ -185,3 +185,23 @@ func TestTransactionRollback(t *testing.T) {
 
 	assert.NotNil(t, err)
 }
+
+func TestQuerySingleObject(t *testing.T) {
+	//ambil data pertama
+	users := User{}
+	err := db.First(&users).Error
+	assert.Nil(t, err)
+	assert.Equal(t, "1", users.ID)
+
+	users = User{}
+	err = db.Last(&users).Error
+	assert.Nil(t, err)
+	assert.Equal(t, "9", users.ID)
+}
+
+func TestQuerySingleObjectInlineCondition(t *testing.T) {
+	users := User{}
+	err := db.Take(&users, "id = ?", "5").Error
+	assert.Nil(t, err)
+	assert.Equal(t, "5", users.ID)
+}
