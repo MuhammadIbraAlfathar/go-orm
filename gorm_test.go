@@ -1,6 +1,7 @@
 package go_orm
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -212,4 +213,34 @@ func TestQueryAllObject(t *testing.T) {
 	err := db.Find(&users, "id in ?", []string{"1", "2", "3", "4"}).Error
 	assert.Nil(t, err)
 	assert.Equal(t, 4, len(users))
+}
+
+func TestQueryCondition(t *testing.T) {
+	var users []User
+
+	err := db.Where("first_name like ?", "%test%").
+		Where("password = ?", "test123").Find(&users).Error
+
+	assert.Nil(t, err)
+	assert.Equal(t, 3, len(users))
+	fmt.Println(users)
+}
+
+func TestOrCondition(t *testing.T) {
+	var users []User
+
+	err := db.Where("first_name like ?", "%User%").
+		Or("password = ?", "rahasia").Find(&users).Error
+
+	assert.Nil(t, err)
+
+}
+
+func TestNotCondition(t *testing.T) {
+	var users []User
+
+	err := db.Not("first_name like ?", "%User%").
+		Where("password = ?", "rahasia").Find(&users).Error
+
+	assert.Nil(t, err)
 }
