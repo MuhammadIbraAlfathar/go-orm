@@ -41,3 +41,15 @@ type Sample struct {
 	Id   string
 	Name string
 }
+
+func TestRawSql(t *testing.T) {
+	var sample Sample
+	err := db.Raw("select id, name from sample where id = ?", "1").Scan(&sample).Error
+	assert.Nil(t, err)
+	assert.Equal(t, "Jhon", sample.Name)
+
+	var samples []Sample
+	err = db.Raw("select id, name from sample").Scan(&samples).Error
+	assert.Nil(t, err)
+	assert.Equal(t, 4, len(samples))
+}

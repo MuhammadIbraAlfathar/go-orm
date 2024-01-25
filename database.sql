@@ -1,1 +1,1 @@
-select * from sample;
+select id, name from sample;
