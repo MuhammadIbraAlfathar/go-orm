@@ -112,3 +112,76 @@ func TestBatchInsert(t *testing.T) {
 	db.Create(users)
 
 }
+
+func TestTransaction(t *testing.T) {
+	err := db.Transaction(func(tx *gorm.DB) error {
+
+		err := tx.Create(&User{
+			ID: "11",
+			Name: Name{
+				FirstName: "test 1",
+			},
+			Password: "test123",
+		}).Error
+		if err != nil {
+			return err
+		}
+
+		err = tx.Create(&User{
+			ID: "12",
+			Name: Name{
+				FirstName: "test 2",
+			},
+			Password: "test123",
+		}).Error
+		if err != nil {
+			return err
+		}
+
+		err = tx.Create(&User{
+			ID: "13",
+			Name: Name{
+				FirstName: "test 3",
+			},
+			Password: "test123",
+		}).Error
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	assert.Nil(t, err)
+}
+
+func TestTransactionRollback(t *testing.T) {
+	err := db.Transaction(func(tx *gorm.DB) error {
+
+		err := tx.Create(&User{
+			ID: "14",
+			Name: Name{
+				FirstName: "test 4",
+			},
+			Password: "test123",
+		}).Error
+		if err != nil {
+			return err
+		}
+
+		err = tx.Create(&User{
+			ID: "12",
+			Name: Name{
+				FirstName: "test 2",
+			},
+			Password: "test123",
+		}).Error
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	assert.NotNil(t, err)
+}
