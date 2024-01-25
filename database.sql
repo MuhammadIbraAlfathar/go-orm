@@ -1,4 +1,4 @@
-create table user (
+create table users (
     id varchar(100) not null ,
     password varchar(100) not null ,
     name varchar(100) not null ,
@@ -7,4 +7,9 @@ create table user (
     primary key (id)
 )engine = InnoDB;
 
-select * from user
+select * from users;
+
+alter table users change name first_name varchar(100);
+
+alter table users add column middle_name varchar(100) null after first_name;
+alter table users add column last_name varchar(100) null after middle_name;
