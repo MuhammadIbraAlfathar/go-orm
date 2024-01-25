@@ -4,6 +4,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"strconv"
 	"testing"
 )
 
@@ -90,4 +91,21 @@ func TestCreateUser(t *testing.T) {
 	response := db.Create(&user)
 	assert.Nil(t, response.Error)
 	assert.Equal(t, int64(1), response.RowsAffected)
+}
+
+func TestBatchInsert(t *testing.T) {
+	var users []User
+
+	for i := 2; i < 10; i++ {
+		users = append(users, User{
+			ID: strconv.Itoa(i),
+			Name: Name{
+				FirstName: "User " + strconv.Itoa(i),
+			},
+			Password: "rahaisa",
+		})
+	}
+
+	db.Create(users)
+
 }
