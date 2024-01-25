@@ -74,3 +74,20 @@ func TestSqlRows(t *testing.T) {
 
 	assert.Equal(t, 4, len(samples))
 }
+
+func TestCreateUser(t *testing.T) {
+	user := User{
+		ID: "1",
+		Name: Name{
+			FirstName:  "Muhammad",
+			MiddleName: "Ibra",
+			LastName:   "Alfathar",
+		},
+		Password: "rahaisanegara",
+	}
+
+	//insert data
+	response := db.Create(&user)
+	assert.Nil(t, response.Error)
+	assert.Equal(t, int64(1), response.RowsAffected)
+}
