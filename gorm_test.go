@@ -244,3 +244,42 @@ func TestNotCondition(t *testing.T) {
 
 	assert.Nil(t, err)
 }
+
+func TestSelectFields(t *testing.T) {
+	var users []User
+	err := db.Select("id", "first_name").Find(&users).Error
+	assert.Nil(t, err)
+
+	for _, user := range users {
+		assert.NotNil(t, user.ID)
+		assert.NotEqual(t, "", user.Name.FirstName)
+	}
+}
+
+func TestStructCondition(t *testing.T) {
+	var users []User
+
+	userCondition := User{
+		Name: Name{
+			FirstName: "User 5",
+			LastName:  "", //tidak bisa karena dianggap data default
+		},
+		Password: "rahaisa",
+	}
+
+	err := db.Where(userCondition).Find(&users).Error
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(users))
+}
+
+func TestMapCondition(t *testing.T) {
+	var users []User
+
+	userCondition := map[string]interface{}{
+		"middle_name": "",
+	}
+
+	err := db.Where(userCondition).Find(&users).Error
+	assert.Nil(t, err)
+	assert.Equal(t, 11, len(users))
+}
