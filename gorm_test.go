@@ -4,13 +4,16 @@ import (
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"strconv"
 	"testing"
 )
 
 func OpenConnection() *gorm.DB {
 	dialect := mysql.Open("root:@tcp(127.0.0.1:3306)/golang_orm?charset=utf8mb4&parseTime=True&loc=Local")
-	db, err := gorm.Open(dialect, &gorm.Config{})
+	db, err := gorm.Open(dialect, &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 	if err != nil {
 		panic(err)
 	}
