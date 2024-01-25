@@ -283,3 +283,11 @@ func TestMapCondition(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, 11, len(users))
 }
+
+func TestOrderLimitOffset(t *testing.T) {
+	var users []User
+
+	err := db.Order("id asc, first_name desc").Limit(5).Offset(5).Find(&users).Error
+	assert.Nil(t, err)
+	assert.Equal(t, 5, len(users))
+}
