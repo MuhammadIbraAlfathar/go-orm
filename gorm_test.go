@@ -5,6 +5,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"gorm.io/gorm/logger"
 	"strconv"
 	"testing"
@@ -347,4 +348,60 @@ func TestAutoIncrement(t *testing.T) {
 		assert.NotEqual(t, 0, userLog.ID)
 		fmt.Println(userLog)
 	}
+}
+
+func TestConflict(t *testing.T) {
+	user := User{
+		ID: "88",
+		Name: Name{
+			FirstName: "User 88 Updated",
+		},
+	}
+
+	err := db.Clauses(clause.OnConflict{UpdateAll: true}).Create(&user).Error
+	assert.Nil(t, err)
+}
+
+func TestDelete(t *testing.T) {
+	var user []User
+	err := db.Take(&user, "id = ?", "88").Error
+	assert.Nil(t, err)
+
+	err = db.Delete(&User{}, "id = ?", "88").Error
+	assert.Nil(t, err)
+
+	err = db.Where("id = ?", "10").Delete(&User{}).Error
+	assert.Nil(t, err)
+}
+
+func TestSoftDelete(t *testing.T) {
+	todo := Todo{
+		UserId:      "2",
+		Title:       "Todo 2",
+		Description: "Description todo 2",
+	}
+
+	err := db.Create(&todo).Error
+	assert.Nil(t, err)
+
+	//err := db.Where("id = ?", 1).Delete(&todo).Error
+	//assert.Nil(t, err)
+
+}
+
+func TestUnscoped(t *testing.T) {
+	var todo Todo
+
+	err := db.Unscoped().Take(&todo, "id = ?", 2).Error
+	assert.Nil(t, err)
+	fmt.Println(todo)
+
+	//err = db.Unscoped().Where("id = ?", 2).Delete(&todo).Error
+	//assert.Nil(t, err)
+
+	var todos []Todo
+	err = db.Unscoped().Find(&todos).Error
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(todos))
+
 }
