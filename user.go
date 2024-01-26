@@ -9,6 +9,7 @@ type User struct {
 	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime"`
 	UpdatedAt time.Time `gorm:"column:created_at;autoCreateTime;autoUpdateTime"`
 	Wallet    Wallet    `gorm:"foreignKey:user_id;references:id"`
+	Address   []Address `gorm:"foreignKey:user_id;references:id"`
 }
 
 type Name struct {

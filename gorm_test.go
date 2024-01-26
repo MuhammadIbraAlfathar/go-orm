@@ -446,7 +446,61 @@ func TestRetrieveRelation(t *testing.T) {
 func TestRetrieveRelationJoin(t *testing.T) {
 	var user User
 
-	err := db.Model(&User{}).Joins("Wallet").Take(&user, "users.id = ?", "2").Error
+	err := db.Model(&User{}).Joins("Wallet").Take(&user, "users.id = ?", "29").Error
 	assert.Nil(t, err)
 	fmt.Println(user)
+}
+
+func TestUpsertOneToOne(t *testing.T) {
+	user := User{
+		ID: "29",
+		Name: Name{
+			FirstName: "User 29",
+		},
+		Password: "testing123",
+		Wallet: Wallet{
+			ID:      "29",
+			UserId:  "29",
+			Balance: 1000000,
+		},
+	}
+
+	err := db.Create(&user).Error
+	assert.Nil(t, err)
+}
+
+func TestUserAndAddress(t *testing.T) {
+	user := User{
+		ID:   "53",
+		Name: Name{FirstName: "User 53"},
+		Wallet: Wallet{
+			ID:      "53",
+			UserId:  "53",
+			Balance: 2000000,
+		},
+		Address: []Address{
+			{
+				UserId:  "53",
+				Address: "Jl. Nangka",
+			},
+		},
+	}
+
+	err := db.Create(&user).Error
+	assert.Nil(t, err)
+}
+
+func TestPreloadJoin(t *testing.T) {
+	var users User
+	err := db.Model(&User{}).Preload("Address").Joins("Wallet").Find(&users).Error
+	assert.Nil(t, err)
+	fmt.Println(users)
+}
+
+func TestPreloadOneToMany(t *testing.T) {
+	var users []User
+	err := db.Model(&User{}).Preload("Address").Joins("Wallet").Take(&users, "users.id = ?", "53").Error
+	assert.Nil(t, err)
+
+	fmt.Println(users)
 }
