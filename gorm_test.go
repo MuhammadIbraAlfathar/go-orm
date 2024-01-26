@@ -335,3 +335,16 @@ func TestUpdateSelectedColumn(t *testing.T) {
 	err = db.Model(&User{}).Where("id = ?", "1").Updates(User{Name: Name{FirstName: "tsetttt"}}).Error
 	assert.Nil(t, err)
 }
+
+func TestAutoIncrement(t *testing.T) {
+	for i := 0; i < 10; i++ {
+		userLog := UserLog{
+			UserID: "000" + strconv.Itoa(i),
+			Action: "test action",
+		}
+		result := db.Create(&userLog)
+		assert.Nil(t, result.Error)
+		assert.NotEqual(t, 0, userLog.ID)
+		fmt.Println(userLog)
+	}
+}
