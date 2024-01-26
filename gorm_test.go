@@ -504,3 +504,17 @@ func TestPreloadOneToMany(t *testing.T) {
 
 	fmt.Println(users)
 }
+
+func TestBelongsTo(t *testing.T) {
+	fmt.Println("Preload")
+	var address []Address
+	err := db.Model(&Address{}).Preload("User").Find(&address).Error
+	assert.Nil(t, err)
+	fmt.Println(address)
+
+	address = []Address{}
+	fmt.Println("Joins")
+	err = db.Model(&Address{}).Joins("User").Find(&address).Error
+	assert.Nil(t, err)
+	fmt.Println(address)
+}
