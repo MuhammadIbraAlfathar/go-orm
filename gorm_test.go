@@ -532,3 +532,45 @@ func TestBelongsToWallet(t *testing.T) {
 	assert.Nil(t, err)
 	fmt.Println(wallet)
 }
+
+func TestCreateManyToMany(t *testing.T) {
+	//product := Product{
+	//	ID:    "P001",
+	//	Name:  "Contoh Product",
+	//	Price: 100000,
+	//}
+
+	//err := db.Create(&product).Error
+	//assert.Nil(t, err)
+
+	err := db.Table("user_like_product").Create(map[string]interface{}{
+		"user_id":    "11",
+		"product_id": "P001",
+	}).Error
+
+	assert.Nil(t, err)
+
+	err = db.Table("user_like_product").Create(map[string]interface{}{
+		"user_id":    "12",
+		"product_id": "P001",
+	}).Error
+
+	assert.Nil(t, err)
+
+}
+
+func TestPreloadManyToMany(t *testing.T) {
+	var product Product
+	err := db.Preload("LikedByUsers").Take(&product, "id = ?", "P001").Error
+	assert.Nil(t, err)
+	assert.Equal(t, 4, len(product.LikedByUsers))
+	fmt.Println(product.LikedByUsers)
+}
+
+func TestPreloadManyToManyProduct(t *testing.T) {
+	var user User
+	err := db.Preload("LikeProducts").Take(&user, "id = ?", "11").Error
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(user.LikeProducts))
+	fmt.Println(user.LikeProducts)
+}

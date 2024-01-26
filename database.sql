@@ -81,5 +81,40 @@ create table addresses (
 select * from addresses;
 
 
+create table products (
+    id varchar(100) not null,
+    name varchar(100) not null ,
+    price bigint not null ,
+    created_at timestamp not null default current_timestamp,
+    updated_at timestamp not null default current_timestamp on update current_timestamp,
+    primary key (id)
+) engine = InnoDB;
+
+
+
+create table user_like_product (
+    user_id varchar(100) not null,
+    product_id varchar(100) not null,
+    primary key (user_id, product_id),
+    foreign key (user_id) references users(id),
+    foreign key (product_id) references products(id)
+) engine = InnoDB;
+
+desc user_like_product;
+
+desc products;
+
+select * from user_like_product;
+select * from users;
+select * from products;
+
+drop table user_like_product;
+
+show tables ;
+
+
+
+
+
 
 

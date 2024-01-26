@@ -3,13 +3,14 @@ package go_orm
 import "time"
 
 type User struct {
-	ID        string    `gorm:"primary_key;column:id;<-:create"`
-	Name      Name      `gorm:"embedded"`
-	Password  string    `gorm:"column:password"`
-	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime"`
-	UpdatedAt time.Time `gorm:"column:created_at;autoCreateTime;autoUpdateTime"`
-	Wallet    Wallet    `gorm:"foreignKey:user_id;references:id"`
-	Address   []Address `gorm:"foreignKey:user_id;references:id"`
+	ID           string    `gorm:"primary_key;column:id"`
+	Name         Name      `gorm:"embedded"`
+	Password     string    `gorm:"column:password"`
+	CreatedAt    time.Time `gorm:"column:created_at;autoCreateTime"`
+	UpdatedAt    time.Time `gorm:"column:created_at;autoCreateTime;autoUpdateTime"`
+	Wallet       Wallet    `gorm:"foreignKey:user_id;references:id"`
+	Address      []Address `gorm:"foreignKey:user_id;references:id"`
+	LikeProducts []Product `gorm:"many2many:user_like_product;foreignKey:id;joinForeignKey:user_id;references:id;joinReferences:product_id"`
 }
 
 type Name struct {
