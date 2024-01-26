@@ -107,10 +107,13 @@ desc products;
 select * from user_like_product;
 select * from users;
 select * from products;
+select * from wallets;
 
 drop table user_like_product;
 
 show tables ;
+
+desc wallets;
 
 
 
