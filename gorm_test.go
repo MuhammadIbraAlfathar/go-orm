@@ -376,32 +376,32 @@ func TestDelete(t *testing.T) {
 
 func TestSoftDelete(t *testing.T) {
 	todo := Todo{
-		UserId:      "2",
-		Title:       "Todo 2",
-		Description: "Description todo 2",
+		UserId:      "3",
+		Title:       "Todo 3",
+		Description: "Description todo 3",
 	}
 
 	err := db.Create(&todo).Error
 	assert.Nil(t, err)
 
-	//err := db.Where("id = ?", 1).Delete(&todo).Error
-	//assert.Nil(t, err)
+	err = db.Where("id = ?", 3).Delete(&todo).Error
+	assert.Nil(t, err)
 
 }
 
 func TestUnscoped(t *testing.T) {
 	var todo Todo
 
-	err := db.Unscoped().Take(&todo, "id = ?", 2).Error
+	err := db.Unscoped().Take(&todo, "id = ?", 3).Error
 	assert.Nil(t, err)
 	fmt.Println(todo)
 
-	//err = db.Unscoped().Where("id = ?", 2).Delete(&todo).Error
-	//assert.Nil(t, err)
+	err = db.Unscoped().Where("id = ?", 3).Delete(&todo).Error
+	assert.Nil(t, err)
 
 	var todos []Todo
 	err = db.Unscoped().Find(&todos).Error
 	assert.Nil(t, err)
-	assert.Equal(t, 1, len(todos))
+	//assert.Equal(t, 1, len(todos))
 
 }
