@@ -677,3 +677,17 @@ func TestPreloadAll(t *testing.T) {
 
 	fmt.Println(user)
 }
+
+func TestJoinQuery(t *testing.T) {
+	// inner join (jadi datanya harus ada di keduanya)
+	var user []User
+	err := db.Joins("join wallets on wallets.user_id = users.id").Find(&user).Error
+	assert.Nil(t, err)
+	assert.Equal(t, 6, len(user))
+
+	// left join
+	user = []User{}
+	err = db.Joins("Wallet").Find(&user).Error
+	assert.Nil(t, err)
+	assert.Equal(t, 15, len(user))
+}

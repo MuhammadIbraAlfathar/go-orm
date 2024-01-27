@@ -116,6 +116,8 @@ show tables ;
 
 desc wallets;
 
+select count(id) from users;
+
 
 
 
