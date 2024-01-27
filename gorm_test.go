@@ -691,3 +691,19 @@ func TestJoinQuery(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, 15, len(user))
 }
+
+func TestJoinQueryWithCondition(t *testing.T) {
+	// inner join (jadi datanya harus ada di keduanya)
+	var user []User
+	err := db.Joins("join wallets on wallets.user_id = users.id AND wallets.balance > ?", 10000).Find(&user).Error
+	assert.Nil(t, err)
+	assert.Equal(t, 6, len(user))
+	fmt.Println(user)
+
+	// left join
+	user = []User{}
+	err = db.Joins("Wallet").Where("Wallet.balance > ?", 10000).Find(&user).Error
+	assert.Nil(t, err)
+	assert.Equal(t, 6, len(user))
+	fmt.Println(user)
+}
