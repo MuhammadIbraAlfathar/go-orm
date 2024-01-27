@@ -707,3 +707,19 @@ func TestJoinQueryWithCondition(t *testing.T) {
 	assert.Equal(t, 6, len(user))
 	fmt.Println(user)
 }
+
+type AggregationResult struct {
+	MaxBalance int64
+	MinBalance int64
+}
+
+func TestAggregation(t *testing.T) {
+	var result AggregationResult
+	err := db.Model(&Wallet{}).Select("max(balance) as max_balance", "min(balance) as min_balance").Take(&result).Error
+
+	assert.Nil(t, err)
+	assert.Equal(t, int64(20000000), result.MaxBalance)
+	assert.Equal(t, int64(1000000), result.MinBalance)
+
+	fmt.Println(result)
+}
