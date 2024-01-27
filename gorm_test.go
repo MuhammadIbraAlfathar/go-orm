@@ -1,6 +1,7 @@
 package go_orm
 
 import (
+	"context"
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/mysql"
@@ -735,4 +736,13 @@ func TestAggregationGroupByHaving(t *testing.T) {
 	assert.Equal(t, 4, len(result))
 
 	fmt.Println(result)
+}
+
+func TestContext(t *testing.T) {
+	ctx := context.Background()
+
+	var user []User
+	err := db.WithContext(ctx).Find(&user).Error
+	assert.Nil(t, err)
+	assert.Equal(t, 15, len(user))
 }
